@@ -18,6 +18,8 @@ public class NoteEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String title;
+
     private String text;
 
     private LocalDateTime creationDate;
@@ -28,7 +30,9 @@ public class NoteEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    public NoteEntity(String text, LocalDateTime creationDate, LocalDateTime lastUpdate, UserEntity user) {
+    public NoteEntity(String title, String text, LocalDateTime creationDate, LocalDateTime lastUpdate,
+            UserEntity user) {
+        this.title = title;
         this.text = text;
         this.creationDate = creationDate;
         this.lastUpdate = lastUpdate;
@@ -62,4 +66,13 @@ public class NoteEntity {
     public UserEntity getUser() {
         return user;
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
 }
