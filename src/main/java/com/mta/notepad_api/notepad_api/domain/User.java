@@ -1,8 +1,5 @@
 package com.mta.notepad_api.notepad_api.domain;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class User {
 
     private String username;
@@ -53,17 +50,6 @@ public class User {
         this.asset = asset;
     }
 
-    public boolean activateAccount(boolean asset) {
-
-        if (asset) {
-
-            return true;
-        } else {
-
-            return false;
-        }
-    }
-
     public String changePassword(String newPassword, String oldPassword) {
 
         if (newPassword.length() > 8 && (oldPassword.equals(this.password))) {
@@ -73,15 +59,6 @@ public class User {
 
             throw new RuntimeException();
         }
-    }
-
-    public boolean isValidEmail(String email) {
-
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-        Pattern pattern = Pattern.compile(emailRegex);
-        Matcher matcher = pattern.matcher(email);
-
-        return matcher.matches();
     }
 
 }

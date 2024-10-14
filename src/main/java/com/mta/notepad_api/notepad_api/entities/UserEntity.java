@@ -23,13 +23,10 @@ public class UserEntity {
 
     private String password;
 
-    private Long numberNotes;
-
-    public UserEntity(String username, String email, String password, Long numberNotes) {
+    public UserEntity(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.numberNotes = numberNotes;
     }
 
     public Long getId() {
@@ -58,14 +55,6 @@ public class UserEntity {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public Long getNumberNotes() {
-        return numberNotes;
-    }
-
-    public void setNumberNotes(Long numberNotes) {
-        this.numberNotes = numberNotes;
     }
 
 }
