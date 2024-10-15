@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.mta.notepad_api.notepad_api.dtos.UserDTO;
 import com.mta.notepad_api.notepad_api.entities.UserEntity;
 import com.mta.notepad_api.notepad_api.repositories.IUserRepository;
 
@@ -42,5 +43,44 @@ public class ValidationUserService {
         }
 
         return true;
+    }
+
+    public boolean executeValidations(UserDTO userDTO) {
+
+        try {
+
+            if (!isValidEmail(userDTO.getEmail())) {
+
+                System.err.println("Invalid Email");
+            } else {
+
+                System.err.println("Valid Email");
+            }
+
+            if (!isValidPassword(userDTO.getPassword())) {
+
+                System.err.println("Invalid Password");
+            } else {
+
+                System.err.println("Valid Password");
+            }
+
+            if (!isValidUsername(userDTO.getUsername())) {
+
+                System.err.println("Username exists");
+            } else {
+
+                System.err.println("Valid Username");
+            }
+
+            return (isValidEmail(userDTO.getEmail()) && isValidPassword(userDTO.getPassword())
+                    && isValidUsername(userDTO.getUsername()));
+
+        } catch (Exception e) {
+
+            System.err.println("unexpected error" + e.getMessage());
+            return false;
+        }
+
     }
 }
