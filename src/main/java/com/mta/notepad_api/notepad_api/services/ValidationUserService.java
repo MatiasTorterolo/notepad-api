@@ -5,15 +5,22 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import com.mta.notepad_api.notepad_api.dtos.UserDTO;
+import com.mta.notepad_api.notepad_api.dtos.UserResponseDTO;
 import com.mta.notepad_api.notepad_api.entities.UserEntity;
 import com.mta.notepad_api.notepad_api.repositories.IUserRepository;
 
+@Service
 public class ValidationUserService {
 
     @Autowired
     private IUserRepository iUserRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public boolean isValidEmail(String email) {
 
@@ -54,7 +61,7 @@ public class ValidationUserService {
                 System.err.println("Invalid Email");
             } else {
 
-                System.err.println("Valid Email");
+                System.out.println("Valid Email");
             }
 
             if (!isValidPassword(userDTO.getPassword())) {
@@ -62,7 +69,7 @@ public class ValidationUserService {
                 System.err.println("Invalid Password");
             } else {
 
-                System.err.println("Valid Password");
+                System.out.println("Valid Password");
             }
 
             if (!isValidUsername(userDTO.getUsername())) {
@@ -70,7 +77,7 @@ public class ValidationUserService {
                 System.err.println("Username exists");
             } else {
 
-                System.err.println("Valid Username");
+                System.out.println("Valid Username");
             }
 
             return (isValidEmail(userDTO.getEmail()) && isValidPassword(userDTO.getPassword())
@@ -82,5 +89,22 @@ public class ValidationUserService {
             return false;
         }
 
+    }
+
+    public Optional<UserResponseDTO> authenticateUser(UserDTO userDTO) {
+
+        Optional<UserEntity> userEntity = iUserRepository.findByEmail(userDTO.getEmail());
+
+        if (userEntity.isPresent()) {
+
+            if (passwordEncoder.matches(userDTO.getPassword(), userEntity.get().getPassword())) {
+
+                UserResponseDTO userResponse = new UserResponseDTO(userEntity.get().getUsername());
+
+                return Optional.of(userResponse);
+            }
+        }
+
+        return Optional.empty();
     }
 }

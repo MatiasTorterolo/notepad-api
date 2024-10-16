@@ -9,4 +9,6 @@ import com.mta.notepad_api.notepad_api.entities.UserEntity;
 public interface IUserRepository extends JpaRepository<UserEntity, Long> {
 
     public Optional<UserEntity> findByUsername(String username);
+
+    public Optional<UserEntity> findByEmail(String email);
 }

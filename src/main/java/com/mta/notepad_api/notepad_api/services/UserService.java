@@ -18,12 +18,12 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public UserEntity register(UserDTO userDTO) {
+    public UserEntity create(UserDTO userDTO) {
 
         User user = new User(userDTO.getUsername(), userDTO.getEmail(), userDTO.getPassword(), true);
 
         UserEntity userEntity = new UserEntity(user.getUsername(), user.getEmail(),
-                passwordEncoder.encode(user.getPassword()));
+                passwordEncoder.encode(user.getPassword()), true);
 
         return iUserRepository.save(userEntity);
     }
