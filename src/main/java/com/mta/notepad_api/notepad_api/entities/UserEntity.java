@@ -23,10 +23,16 @@ public class UserEntity {
 
     private String password;
 
-    public UserEntity(String username, String email, String password) {
+    private boolean asset;
+
+    public UserEntity() {
+    }
+
+    public UserEntity(String username, String email, String password, boolean asset) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.asset = asset;
     }
 
     public Long getId() {
@@ -55,6 +61,14 @@ public class UserEntity {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public boolean isAsset() {
+        return asset;
+    }
+
+    public void setAsset(boolean asset) {
+        this.asset = asset;
     }
 
 }
