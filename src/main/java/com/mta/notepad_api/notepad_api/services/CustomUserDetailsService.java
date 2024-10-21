@@ -1,5 +1,6 @@
 package com.mta.notepad_api.notepad_api.services;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +22,13 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Transactional(readOnly = true)
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Optional<UserEntity> userOptional = iUserRepository.findByEmail(email);
+        Optional<UserEntity> userOptional = iUserRepository.findByUsername(username);
 
         if (userOptional.isEmpty()) {
 
-            throw new UsernameNotFoundException("email or password are incorrect, or email doesn't exists");
+            throw new UsernameNotFoundException("username or password are incorrect, or username doesn't exists");
         }
 
         UserEntity userEntity = userOptional.get();
@@ -39,7 +40,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 true,
                 true,
                 true,
-                null);
+                Collections.emptyList());
     }
 
 }
