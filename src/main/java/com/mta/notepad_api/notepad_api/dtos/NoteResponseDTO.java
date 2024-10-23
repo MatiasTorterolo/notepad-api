@@ -2,9 +2,9 @@ package com.mta.notepad_api.notepad_api.dtos;
 
 import java.time.LocalDateTime;
 
-import com.mta.notepad_api.notepad_api.domain.Note;
+public class NoteResponseDTO {
 
-public class NoteDTO {
+    private Long id;
 
     private String title;
 
@@ -14,7 +14,8 @@ public class NoteDTO {
 
     private LocalDateTime lastUpdate;
 
-    public NoteDTO(String title, String text, LocalDateTime creationDate, LocalDateTime lastUpdate) {
+    public NoteResponseDTO(Long id, String title, String text, LocalDateTime creationDate, LocalDateTime lastUpdate) {
+        this.id = id;
         this.title = title;
         this.text = text;
         this.creationDate = creationDate;
@@ -49,8 +50,7 @@ public class NoteDTO {
         this.lastUpdate = lastUpdate;
     }
 
-    public Note asDomainObject() {
-        return Note.WritedWith(this.getTitle(), this.getText(), this.getCreationDate(),
-                this.getLastUpdate());
+    public Long getId() {
+        return id;
     }
 }
