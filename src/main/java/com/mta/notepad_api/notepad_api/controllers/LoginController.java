@@ -28,7 +28,7 @@ public class LoginController {
 
         if (validationUserService.executeValidations(userDTO)) {
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(userDTO));
+            return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(userDTO));
         }
 
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

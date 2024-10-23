@@ -10,6 +10,9 @@ import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 
+import com.mta.notepad_api.notepad_api.domain.Note;
+import com.mta.notepad_api.notepad_api.dtos.NoteDTO;
+
 @Entity
 @Table(name = "notes")
 public class NoteEntity {
@@ -73,6 +76,18 @@ public class NoteEntity {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public static NoteEntity FromDTO(NoteDTO noteDTO, UserEntity userEntity) {
+
+        return new NoteEntity(noteDTO.getTitle(), noteDTO.getText(), noteDTO.getCreationDate(),
+                LocalDateTime.now(), userEntity);
+    }
+
+    public static NoteEntity BasedOnDomainNote(Note note, UserEntity userEntity) {
+
+        return new NoteEntity(note.getTitle(), note.getText(), note.getCreationDate(), note.getLastUpdate(),
+                userEntity);
     }
 
 }

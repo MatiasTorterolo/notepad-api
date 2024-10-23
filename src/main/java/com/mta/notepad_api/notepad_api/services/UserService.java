@@ -3,6 +3,7 @@ package com.mta.notepad_api.notepad_api.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mta.notepad_api.notepad_api.domain.User;
 import com.mta.notepad_api.notepad_api.dtos.UserDTO;
@@ -18,7 +19,8 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public UserEntity create(UserDTO userDTO) {
+    @Transactional
+    public UserEntity createUser(UserDTO userDTO) {
 
         User user = new User(userDTO.getUsername(), userDTO.getEmail(), userDTO.getPassword(), true);
 

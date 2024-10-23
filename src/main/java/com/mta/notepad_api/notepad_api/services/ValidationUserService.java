@@ -5,11 +5,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mta.notepad_api.notepad_api.dtos.UserDTO;
-import com.mta.notepad_api.notepad_api.dtos.UserResponseDTO;
 import com.mta.notepad_api.notepad_api.entities.UserEntity;
 import com.mta.notepad_api.notepad_api.repositories.IUserRepository;
 
@@ -18,9 +17,6 @@ public class ValidationUserService {
 
     @Autowired
     private IUserRepository iUserRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     public boolean isValidEmail(String email) {
 
@@ -40,6 +36,7 @@ public class ValidationUserService {
         return matcher.matches();
     }
 
+    @Transactional(readOnly = true)
     public boolean isValidUsername(String username) {
 
         Optional<UserEntity> userEntity = iUserRepository.findByUsername(username);
@@ -91,20 +88,4 @@ public class ValidationUserService {
 
     }
 
-    public Optional<UserResponseDTO> authenticateUser(UserDTO userDTO) {
-
-        Optional<UserEntity> userEntity = iUserRepository.findByEmail(userDTO.getEmail());
-
-        if (userEntity.isPresent()) {
-
-            if (passwordEncoder.matches(userDTO.getPassword(), userEntity.get().getPassword())) {
-
-                UserResponseDTO userResponse = new UserResponseDTO(userEntity.get().getUsername());
-
-                return Optional.of(userResponse);
-            }
-        }
-
-        return Optional.empty();
-    }
 }
