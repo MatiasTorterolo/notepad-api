@@ -29,7 +29,7 @@ public class Note {
 
     private static void AssertTitleAndTextIsDefined(String title, String text) {
 
-        if (title == null || title.isEmpty() || text == null || text.isEmpty()) {
+        if ((title == null || title.isEmpty()) && (text == null || text.isEmpty())) {
             throw new IllegalArgumentException("Title and text must be defined");
         }
     }
