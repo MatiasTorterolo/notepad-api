@@ -33,6 +33,9 @@ public class NoteEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    public NoteEntity() {
+    }
+
     public NoteEntity(String title, String text, LocalDateTime creationDate, LocalDateTime lastUpdate,
             UserEntity user) {
         this.title = title;
@@ -90,4 +93,12 @@ public class NoteEntity {
                 userEntity);
     }
 
+    public static NoteEntity UpdateNoteEntity(Note note, NoteEntity noteEntity) {
+
+        noteEntity.setTitle(note.getTitle());
+        noteEntity.setText(note.getText());
+        noteEntity.setLastUpdate(note.getLastUpdate());
+
+        return noteEntity;
+    }
 }
