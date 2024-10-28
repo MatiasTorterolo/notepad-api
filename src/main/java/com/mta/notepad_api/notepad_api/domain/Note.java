@@ -20,11 +20,18 @@ public class Note {
         this.lastUpdate = lastUpdate;
     }
 
-    public static Note WritedWith(String title, String text, LocalDateTime creationDate, LocalDateTime lastUpdate) {
+    public static Note WrittenWith(String title, String text) {
 
         Note.AssertTitleAndTextIsDefined(title, text);
 
-        return new Note(title, text, creationDate, lastUpdate);
+        LocalDateTime now = LocalDateTime.now();
+
+        return new Note(title, text, now, now);
+    }
+
+    public static Note WrittenAt(String title, String text, LocalDateTime creationDate) {
+
+        return new Note(title, text, creationDate, LocalDateTime.now());
     }
 
     private static void AssertTitleAndTextIsDefined(String title, String text) {

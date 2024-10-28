@@ -89,4 +89,44 @@ public class NoteResponseDTO {
             return noteResponseDTO;
         }).collect(Collectors.toList());
     }
+
+    public static NoteResponseDTO ToNoteResponseDTO(NoteEntity noteEntity) {
+
+        NoteResponseDTO noteResponseDTO = new NoteResponseDTO(noteEntity.getId(), noteEntity.getTitle(),
+                noteEntity.getText(), noteEntity.getCreationDate(), noteEntity.getLastUpdate());
+
+        return noteResponseDTO;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((title == null) ? 0 : title.hashCode());
+        result = prime * result + ((text == null) ? 0 : text.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        NoteResponseDTO other = (NoteResponseDTO) obj;
+        if (title == null) {
+            if (other.title != null)
+                return false;
+        } else if (!title.equals(other.title))
+            return false;
+        if (text == null) {
+            if (other.text != null)
+                return false;
+        } else if (!text.equals(other.text))
+            return false;
+        return true;
+    }
+
 }

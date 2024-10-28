@@ -50,7 +50,6 @@ public class NoteDTO {
     }
 
     public Note asDomainObject() {
-        return Note.WritedWith(this.getTitle(), this.getText(), this.getCreationDate(),
-                this.getLastUpdate());
+        return Note.WrittenWith(this.getTitle(), this.getText());
     }
 }
