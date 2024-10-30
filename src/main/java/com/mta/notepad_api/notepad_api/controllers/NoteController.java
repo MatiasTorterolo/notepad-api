@@ -23,6 +23,7 @@ import com.mta.notepad_api.notepad_api.entities.NoteEntity;
 import com.mta.notepad_api.notepad_api.entities.UserEntity;
 import com.mta.notepad_api.notepad_api.repositories.INoteRepository;
 import com.mta.notepad_api.notepad_api.repositories.IUserRepository;
+import com.mta.notepad_api.notepad_api.services.NoteService;
 
 @RestController
 @RequestMapping("/api")
@@ -33,6 +34,9 @@ public class NoteController {
 
     @Autowired
     private IUserRepository iUserRepository;
+
+    @Autowired
+    private NoteService noteService;
 
     @GetMapping("/notes/{username}")
     public ResponseEntity<List<NoteResponseDTO>> showAllNotesUser(@PathVariable String username,
@@ -79,14 +83,8 @@ public class NoteController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        Note note = Note.WrittenWith(noteDTO.getTitle(), noteDTO.getText());
-
-        // domain logic
-
-        NoteEntity noteEntity = NoteEntity.BasedOnDomainNote(note, userEntityOptional.get());
-
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(NoteResponseDTO.ToNoteResponseDTO(iNoteRepository.save(noteEntity)));
+                .body(NoteResponseDTO.ToNoteResponseDTO(noteService.createNote(noteDTO, userEntityOptional.get())));
     }
 
     @PutMapping("/notes/{username}/{note_id}")

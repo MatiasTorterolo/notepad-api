@@ -35,6 +35,14 @@ public class UserEntity {
         this.asset = asset;
     }
 
+    public UserEntity(Long id, String username, String email, String password, boolean asset) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.asset = asset;
+    }
+
     public Long getId() {
         return id;
     }
@@ -69,6 +77,12 @@ public class UserEntity {
 
     public void setAsset(boolean asset) {
         this.asset = asset;
+    }
+
+    @Override
+    public String toString() {
+        return "UserEntity -> [ username = " + username +
+                ", asset = " + asset + " ]";
     }
 
 }

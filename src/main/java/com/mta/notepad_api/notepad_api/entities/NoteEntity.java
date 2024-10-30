@@ -38,6 +38,18 @@ public class NoteEntity {
 
     public NoteEntity(String title, String text, LocalDateTime creationDate, LocalDateTime lastUpdate,
             UserEntity user) {
+
+        this.title = title;
+        this.text = text;
+        this.creationDate = creationDate;
+        this.lastUpdate = lastUpdate;
+        this.user = user;
+    }
+
+    public NoteEntity(Long id, String title, String text, LocalDateTime creationDate, LocalDateTime lastUpdate,
+            UserEntity user) {
+
+        this.id = id;
         this.title = title;
         this.text = text;
         this.creationDate = creationDate;
@@ -101,4 +113,15 @@ public class NoteEntity {
 
         return noteEntity;
     }
+
+    @Override
+    public String toString() {
+        return "NoteEntity -> \n{ id = " + id +
+                ",\n title = " + title +
+                ",\n text = " + text +
+                ",\n creationDate = " + creationDate +
+                ",\n lastUpdate = " + lastUpdate +
+                ",\n user = " + user + " }";
+    }
+
 }

@@ -39,6 +39,11 @@ public class ValidationUserService {
     @Transactional(readOnly = true)
     public boolean isValidUsername(String username) {
 
+        if (username.isBlank() || username.length() < 3) {
+
+            return false;
+        }
+
         Optional<UserEntity> userEntity = iUserRepository.findByUsername(username);
 
         if (userEntity.isPresent()) {
