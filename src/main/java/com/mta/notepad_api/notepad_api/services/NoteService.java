@@ -20,7 +20,7 @@ public class NoteService {
     private INoteRepository iNoteRepository;
 
     @Transactional
-    private NoteEntity createNote(NoteDTO noteDTO, UserEntity userEntity) {
+    public NoteEntity createNote(NoteDTO noteDTO, UserEntity userEntity) {
 
         Note note = noteDTO.asDomainObject();
 
@@ -41,7 +41,7 @@ public class NoteService {
     }
 
     @Transactional
-    private NoteEntity editNote(NoteDTO noteDTO, UserEntity userEntity) {
+    public NoteEntity editNote(NoteDTO noteDTO, UserEntity userEntity) {
 
         NoteEntity newNoteEntity = NoteEntity.FromDTO(noteDTO, userEntity);
 
@@ -49,7 +49,7 @@ public class NoteService {
     }
 
     @Transactional
-    private void deleteNote(NoteResponseDTO noteResponseDTO) {
+    public void deleteNote(NoteResponseDTO noteResponseDTO) {
 
         Optional<NoteEntity> optionalNoteEntity = iNoteRepository.findById(noteResponseDTO.getId());
 
