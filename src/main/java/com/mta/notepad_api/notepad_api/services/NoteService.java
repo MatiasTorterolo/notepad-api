@@ -1,5 +1,6 @@
 package com.mta.notepad_api.notepad_api.services;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,17 +42,27 @@ public class NoteService {
     }
 
     @Transactional
-    public NoteEntity editNote(NoteDTO noteDTO, UserEntity userEntity) {
+    public NoteEntity editNote(NoteResponseDTO noteResponseDTO, NoteEntity noteEntity) {
 
-        NoteEntity newNoteEntity = NoteEntity.FromDTO(noteDTO, userEntity);
+        noteEntity.setTitle(noteResponseDTO.getTitle());
+        noteEntity.setText(noteResponseDTO.getText());
+        noteEntity.setLastUpdate(LocalDateTime.now());
 
-        return iNoteRepository.save(newNoteEntity);
+        try {
+
+            return iNoteRepository.save(noteEntity);
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            throw new RuntimeException("Error to edit note", e);
+        }
+
     }
 
     @Transactional
-    public void deleteNote(NoteResponseDTO noteResponseDTO) {
+    public void deleteNote(Long note_id) {
 
-        Optional<NoteEntity> optionalNoteEntity = iNoteRepository.findById(noteResponseDTO.getId());
+        Optional<NoteEntity> optionalNoteEntity = iNoteRepository.findById(note_id);
 
         iNoteRepository.delete(optionalNoteEntity.get());
     }

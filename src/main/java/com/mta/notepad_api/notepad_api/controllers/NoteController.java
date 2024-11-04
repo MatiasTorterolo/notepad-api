@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mta.notepad_api.notepad_api.domain.Note;
 import com.mta.notepad_api.notepad_api.dtos.NoteDTO;
 import com.mta.notepad_api.notepad_api.dtos.NoteResponseDTO;
 import com.mta.notepad_api.notepad_api.entities.NoteEntity;
@@ -118,13 +117,8 @@ public class NoteController {
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
 
-        Note note = Note.WrittenAt(noteResponseDTO.getTitle(), noteResponseDTO.getText(),
-                noteResponseDTO.getCreationDate());
-
-        // domain logic
-
         return ResponseEntity.status(HttpStatus.OK).body(NoteResponseDTO
-                .ToNoteResponseDTO(iNoteRepository.save(NoteEntity.UpdateNoteEntity(note, noteEntityOptional.get()))));
+                .ToNoteResponseDTO(noteService.editNote(noteResponseDTO, noteEntityOptional.get())));
     }
 
     @DeleteMapping("/notes/{username}/{note_id}")
@@ -151,7 +145,7 @@ public class NoteController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found Note");
         }
 
-        iNoteRepository.delete(noteEntityOptional.get());
+        noteService.deleteNote(note_id);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
