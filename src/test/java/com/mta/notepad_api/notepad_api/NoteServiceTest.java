@@ -2,6 +2,8 @@ package com.mta.notepad_api.notepad_api;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDateTime;
 
@@ -36,7 +38,7 @@ public class NoteServiceTest {
     }
 
     @Test
-    public void testCreateNote_WhenIsSavedSuccessfully() {
+    public void testCreateNoteWhenIsSavedSuccessfully() {
 
         NoteDTO noteDTO = new NoteDTO("title", "text", LocalDateTime.now(), LocalDateTime.now());
         UserEntity userEntity = new UserEntity(1L, "Jhon", "jhondoe@gmail.com", "P@kjdddeee123", true);
@@ -48,25 +50,40 @@ public class NoteServiceTest {
 
         NoteEntity createdNoteEntity = noteService.createNote(noteDTO, userEntity);
 
-        assertNotNull(createdNoteEntity);
+        // Tengo que hacer todo esto con trues or falses
 
-        System.out.println("Created Note Entity: " + createdNoteEntity.toString());
+        assertNotNull("Entity created is null", createdNoteEntity);
 
-        assertEquals(expectedNoteEntity.getId(), createdNoteEntity.getId());
+        // System.out.println("Created Note Entity: " + createdNoteEntity.toString());
 
-        System.out
-                .println("Expect Note: " + expectedNoteEntity.getId() + " Created Note: " + createdNoteEntity.getId());
+        if (createdNoteEntity != null) {
 
-        assertEquals(expectedNoteEntity.getTitle(), createdNoteEntity.getTitle());
-        assertEquals(expectedNoteEntity.getText(), expectedNoteEntity.getText());
-        assertEquals(expectedNoteEntity.getCreationDate(), expectedNoteEntity.getCreationDate());
-        assertEquals(expectedNoteEntity.getLastUpdate(), expectedNoteEntity.getLastUpdate());
-        assertEquals(expectedNoteEntity.getUser(), expectedNoteEntity.getUser());
+            assertAll("check if all expected attributes matchs the created attributes",
+                    () -> assertEquals(expectedNoteEntity.getId(), createdNoteEntity.getId()),
+                    () -> assertEquals(expectedNoteEntity.getTitle(), createdNoteEntity.getTitle()),
+                    () -> assertEquals(expectedNoteEntity.getText(), createdNoteEntity.getText()),
+                    () -> assertEquals(expectedNoteEntity.getCreationDate(), createdNoteEntity.getCreationDate()),
+                    () -> assertEquals(expectedNoteEntity.getLastUpdate(), createdNoteEntity.getLastUpdate()),
+                    () -> assertEquals(expectedNoteEntity.getUser(), createdNoteEntity.getUser()));
+        }
+
     }
 
     @Test
-    public void testCreateNote_WhenCanNotSaved() {
+    public void testCreateNoteWhenCanNotSaved() {
 
+        NoteDTO noteDTO = new NoteDTO("title", "text", LocalDateTime.now(), LocalDateTime.now());
+        UserEntity userEntity = new UserEntity(1L, "Jhon", "jhondoe@gmail.com", "P@kjdddeee123", true);
+
+        Mockito.when(iNoteRepository.save(Mockito.any(NoteEntity.class)))
+                .thenThrow(new RuntimeException("Error to create note"));
+
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+
+            noteService.createNote(noteDTO, userEntity);
+        });
+
+        assertEquals("Error to create note", exception.getMessage());
     }
 
 }
