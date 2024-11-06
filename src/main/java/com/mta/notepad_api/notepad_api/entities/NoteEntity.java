@@ -96,7 +96,7 @@ public class NoteEntity {
     public static NoteEntity FromDTO(NoteDTO noteDTO, UserEntity userEntity) {
 
         return new NoteEntity(noteDTO.getTitle(), noteDTO.getText(), noteDTO.getCreationDate(),
-                LocalDateTime.now(), userEntity);
+                noteDTO.getLastUpdate(), userEntity);
     }
 
     public static NoteEntity BasedOnDomainNote(Note note, UserEntity userEntity) {
