@@ -1,6 +1,7 @@
 package com.mta.notepad_api.notepad_api.services;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class NoteService {
 
         noteEntity.setTitle(noteResponseDTO.getTitle());
         noteEntity.setText(noteResponseDTO.getText());
-        noteEntity.setLastUpdate(LocalDateTime.now());
+        noteEntity.setLastUpdate(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
 
         try {
 
@@ -62,8 +63,16 @@ public class NoteService {
     @Transactional
     public void deleteNote(Long note_id) {
 
-        Optional<NoteEntity> optionalNoteEntity = iNoteRepository.findById(note_id);
+        try {
 
-        iNoteRepository.delete(optionalNoteEntity.get());
+            Optional<NoteEntity> optionalNoteEntity = iNoteRepository.findById(note_id);
+
+            iNoteRepository.delete(optionalNoteEntity.get());
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            throw new RuntimeException("Error to delete note", e);
+        }
+
     }
 }

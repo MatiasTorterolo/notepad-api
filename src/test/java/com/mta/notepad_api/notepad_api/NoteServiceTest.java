@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import com.mta.notepad_api.notepad_api.dtos.NoteDTO;
+import com.mta.notepad_api.notepad_api.dtos.NoteResponseDTO;
 import com.mta.notepad_api.notepad_api.entities.NoteEntity;
 import com.mta.notepad_api.notepad_api.entities.UserEntity;
 import com.mta.notepad_api.notepad_api.repositories.INoteRepository;
@@ -40,17 +42,19 @@ public class NoteServiceTest {
     @Test
     public void testCreateNoteWhenIsSavedSuccessfully() {
 
-        NoteDTO noteDTO = new NoteDTO("title", "text", LocalDateTime.now(), LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+
+        NoteDTO noteDTO = new NoteDTO("Hi, im a title created", "Hi, im a text created", now, now);
+
         UserEntity userEntity = new UserEntity(1L, "Jhon", "jhondoe@gmail.com", "P@kjdddeee123", true);
 
-        NoteEntity expectedNoteEntity = new NoteEntity(3L, noteDTO.getTitle(), noteDTO.getText(),
-                noteDTO.getCreationDate(), noteDTO.getLastUpdate(), userEntity);
+        NoteEntity expectedNoteEntity = new NoteEntity("Hi, im a title created", "Hi, im a text created",
+                now, now, userEntity);
 
-        Mockito.when(iNoteRepository.save(Mockito.any(NoteEntity.class))).thenReturn(expectedNoteEntity);
+        Mockito.when(iNoteRepository.save(Mockito.any(NoteEntity.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
 
         NoteEntity createdNoteEntity = noteService.createNote(noteDTO, userEntity);
-
-        // Tengo que hacer todo esto con trues or falses
 
         assertNotNull("Entity created is null", createdNoteEntity);
 
@@ -59,7 +63,6 @@ public class NoteServiceTest {
         if (createdNoteEntity != null) {
 
             assertAll("check if all expected attributes matchs the created attributes",
-                    () -> assertEquals(expectedNoteEntity.getId(), createdNoteEntity.getId()),
                     () -> assertEquals(expectedNoteEntity.getTitle(), createdNoteEntity.getTitle()),
                     () -> assertEquals(expectedNoteEntity.getText(), createdNoteEntity.getText()),
                     () -> assertEquals(expectedNoteEntity.getCreationDate(), createdNoteEntity.getCreationDate()),
@@ -84,6 +87,67 @@ public class NoteServiceTest {
         });
 
         assertEquals("Error to create note", exception.getMessage());
+    }
+
+    @Test
+    public void testEditNoteWhenIsSavedSuccessfully() {
+
+        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+
+        NoteResponseDTO noteResponseDTOEdited = new NoteResponseDTO(1L, "Hi, im a title edited", "Hi, im a text edited",
+                LocalDateTime.parse("2007-12-03T10:15:30").truncatedTo(ChronoUnit.MINUTES), now);
+
+        UserEntity userEntity = new UserEntity(1L, "Jhon", "jhondoe@gmail.com", "P@kjdddeee123", true);
+
+        NoteEntity noteEntityWithoutEdition = new NoteEntity(1L, "Hi, im a title", "Hi, im a text",
+                LocalDateTime.parse("2007-12-03T10:15:30").truncatedTo(ChronoUnit.MINUTES),
+                LocalDateTime.parse("2007-12-03T10:15:30").truncatedTo(ChronoUnit.MINUTES), userEntity);
+
+        NoteEntity noteEntityExpected = new NoteEntity(1L, "Hi, im a title edited", "Hi, im a text edited",
+                LocalDateTime.parse("2007-12-03T10:15:30").truncatedTo(ChronoUnit.MINUTES), now, userEntity);
+
+        Mockito.when(iNoteRepository.save(Mockito.any(NoteEntity.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        NoteEntity noteEntityEdited = noteService.editNote(noteResponseDTOEdited, noteEntityWithoutEdition);
+
+        if (noteEntityEdited != null) {
+
+            assertAll("check if all expected attributes matchs the edited attributes",
+                    () -> assertEquals(noteEntityExpected.getId(), noteEntityEdited.getId()),
+                    () -> assertEquals(noteEntityExpected.getTitle(), noteEntityEdited.getTitle()),
+                    () -> assertEquals(noteEntityExpected.getText(), noteEntityEdited.getText()),
+                    () -> assertEquals(noteEntityExpected.getCreationDate(), noteEntityEdited.getCreationDate()),
+                    () -> assertEquals(noteEntityExpected.getLastUpdate(), noteEntityEdited.getLastUpdate()),
+                    () -> assertEquals(noteEntityExpected.getUser(), noteEntityEdited.getUser()));
+        }
+
+    }
+
+    @Test
+    public void testEditNoteWhenCanNotSaved() {
+
+        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+
+        NoteResponseDTO noteResponseDTOEdited = new NoteResponseDTO(1L, "Hi, im a title edited", "Hi, im a text edited",
+                LocalDateTime.parse("2007-12-03T10:15:30").truncatedTo(ChronoUnit.MINUTES), now);
+
+        UserEntity userEntity = new UserEntity(1L, "Jhon", "jhondoe@gmail.com", "P@kjdddeee123", true);
+
+        NoteEntity noteEntityWithoutEdition = new NoteEntity(1L, "Hi, im a title", "Hi, im a text",
+                LocalDateTime.parse("2007-12-03T10:15:30").truncatedTo(ChronoUnit.MINUTES),
+                LocalDateTime.parse("2007-12-03T10:15:30").truncatedTo(ChronoUnit.MINUTES),
+                userEntity);
+
+        Mockito.when(iNoteRepository.save(Mockito.any(NoteEntity.class)))
+                .thenThrow(new RuntimeException("Error to edit note"));
+
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+
+            noteService.editNote(noteResponseDTOEdited, noteEntityWithoutEdition);
+        });
+
+        assertEquals("Error to edit note", exception.getMessage());
     }
 
 }

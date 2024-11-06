@@ -1,6 +1,7 @@
 package com.mta.notepad_api.notepad_api.domain;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 public class Note {
 
@@ -24,14 +25,15 @@ public class Note {
 
         Note.AssertTitleAndTextIsDefined(title, text);
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
 
         return new Note(title, text, now, now);
     }
 
     public static Note WrittenAt(String title, String text, LocalDateTime creationDate) {
 
-        return new Note(title, text, creationDate, LocalDateTime.now());
+        return new Note(title, text, creationDate.truncatedTo(ChronoUnit.MINUTES),
+                LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
     }
 
     private static void AssertTitleAndTextIsDefined(String title, String text) {
